@@ -1,0 +1,208 @@
+/*
+
+
+//*****************************************************************************
+//
+//	The number of clock cycles between SysTick interrupts. The SysTick interrupt
+//	period is 0.1 mS. All events in the application occur at some fraction of
+//	this clock rate.
+//
+//*****************************************************************************
+#define SysTickFrequency		10000
+
+//*****************************************************************************
+//
+// The number of SysTick clock ticks that have occurred.
+//
+//*****************************************************************************
+volatile static unsigned long g_ulTickCount = 0;
+
+//*****************************************************************************
+//
+//      Task to drive the motors on the EvalBot.
+//
+//*****************************************************************************
+
+static unsigned long Task_Motors_NextExecute = 0;
+static unsigned long Task_Motors_DeltaExecute = 0;              //      SysTicks
+
+//
+//      Define EvalBot movements with open loop definitions.
+//
+//              For each step, the entries are:
+//                      (1) Right Motor duty cycle percent in 8.8 format.
+//                      (2) Right Motor direction, 0 -- reverse, 1 -- forward.
+//                      (3) Left Motor duty cycle percent in 8.8 format.
+//                      (4) Left Motor direction, 0 -- reverse, 1 -- forward.
+//                      (5) Number of SysTickCounts for this step.
+//
+//
+//
+//      Another approach to defining Motor Actions.
+//
+
+typedef long MotorAction[5];
+
+/* --
+ *
+
+ typedef struct MotorAction {
+                        int             RightDuty;
+                        int             RightDirection;
+                        int             LeftDuty;
+                        int             LeftDirection;
+                        int             ActionTime;
+                } MotorAction;
+
+
+
+typedef MotorAction MotorSequence[];
+
+typedef MotorSequence *MotorPath[];
+
+//
+//      Now some sequences. We'll do some sequences of straight paths
+//              that can be combined into longer straight paths.
+//
+MotorSequence Forward_1_Sec = {
+                                                { 25<<8, 0, 25<<8, 0, 10000 },
+                                                { 0, -1, 0, 0, 0 }
+                        };
+
+MotorSequence Forward_2_Sec = {
+                                                { 25<<8, 0, 25<<8, 0, 20000 },
+                                                { 0, -1, 0, 0, 0 }
+                        };
+
+MotorSequence Forward_4_Sec = {
+                                                { 25<<8, 0, 25<<8, 0, 40000 },
+                                                { 0, -1, 0, 0, 0 }
+                        };
+
+MotorSequence Forward_8_Sec = {
+                                                { 25<<8, 0, 25<<8, 0, 80000 },
+                                                { 0, -1, 0, 0, 0 }
+                        };
+
+//
+//      Now a wiggle.
+//
+MotorSequence Wiggle_2_Sec = {
+                                                { 25<<8, 0, 25<<8, 1, 5000 },
+                                                { 25<<8, 1, 25<<8, 0, 5000 },
+                                                { 25<<8, 0, 25<<8, 1, 5000 },
+                                                { 25<<8, 1, 25<<8, 0, 5000 },
+                                                { 25<<8, 0, 25<<8, 1, 5000 },
+                                                { 25<<8, 1, 25<<8, 0, 5000 },
+                                                { 0, -1, 0, 0, 0}
+                        };
+
+//
+//      Now a zero turn 180 degrees.
+//
+MotorSequence ZeroTurn_180 = {
+                                                { 25<<8, 0, 25<<8, 1, 50000 },
+                                                { 0, -1, 0, 0, 0 }
+                        };
+
+MotorPath MotorPath_1 = {       &Forward_2_Sec,
+                                                        &Forward_1_Sec,
+                                                        &Wiggle_2_Sec,
+                                                        &Forward_2_Sec,
+                                                        &Forward_1_Sec,
+                                                        &Wiggle_2_Sec,
+                                                        &ZeroTurn_180,
+                                                        NULL };
+
+MotorPath MotorPath_2 = {       &Forward_8_Sec,
+                                                        NULL };
+
+
+static long MotorAction_Idx = 0;
+static long MotorSequence_Idx = 0;
+MotorSequence *Motor_CurrentSequence;
+MotorAction *Motor_CurrentAction;
+
+#define theMotorPath MotorPath_2
+
+void Task_Motors_Init() {
+
+    //
+    // Initialize the motor hardware
+    //
+    MotorsInit();
+
+    //
+    //  Initialize EvalBot MotorPath.
+    //
+    Motor_CurrentSequence = theMotorPath[MotorSequence_Idx];
+    Motor_CurrentAction = &(*Motor_CurrentSequence)[MotorAction_Idx];
+
+        //
+    //  Compute execution interval (1 S) and initial execution time.
+    //
+    Task_Motors_DeltaExecute = (SysTickFrequency * 10000) / 10000;
+    Task_Motors_NextExecute = g_ulTickCount + Task_Motors_DeltaExecute;
+
+}
+
+void Task_Motors_Execute() {
+
+        if ( g_ulTickCount >= Task_Motors_NextExecute ) {
+
+                //
+                //      We first execute within the current MotorSequence
+                //
+                //      Set the Motors.
+                //
+                MotorSpeed( RIGHT_SIDE, (*Motor_CurrentAction)[0] );
+                MotorDir( RIGHT_SIDE, (*Motor_CurrentAction)[1] );
+                MotorSpeed( LEFT_SIDE, (*Motor_CurrentAction)[2] );
+                MotorDir( LEFT_SIDE, (*Motor_CurrentAction)[3] );
+                MotorRun( RIGHT_SIDE );
+                MotorRun( LEFT_SIDE );
+
+                Task_Motors_NextExecute = g_ulTickCount +  (*Motor_CurrentAction)[4];
+
+                //
+                //      OK, the next MotorAction is initiated.
+                //      Now, we advance to the next MotorAction and check if we
+                //              are at the end of a sequence. The end of a MotorSequence
+                //              is indicated by a Right_Motor direction of -1.
+                //
+
+                MotorAction_Idx++;
+            Motor_CurrentAction = &(*Motor_CurrentSequence)[MotorAction_Idx];
+
+                if ( (*Motor_CurrentAction)[1] == -1 ) {
+
+                        //
+                        //      Reset the MotorAction_Idx
+                        //
+                        MotorAction_Idx = 0;
+
+                        //
+                        //      It is the end of a sequence. Advance the MotorSequence index
+                        //
+                        MotorSequence_Idx++;
+                        Motor_CurrentSequence = theMotorPath[MotorSequence_Idx];
+
+                        //
+                        //      Now check if we are at the end of a MotorPath.
+                        //
+                        if ( Motor_CurrentSequence == NULL ) {
+                                MotorSequence_Idx = 0;
+                                Motor_CurrentSequence = theMotorPath[MotorSequence_Idx];
+                        }
+
+                        //
+                        //      Get first action from new sequence.
+                        //
+                    Motor_CurrentAction = &(*Motor_CurrentSequence)[MotorAction_Idx];
+
+                }
+
+        }
+
+}
+*/

@@ -134,11 +134,43 @@ MotorSequence MotorSequence_1 = {
 //		that can be combined into longer straight paths.
 //
 MotorSequence Forward_1_Sec = {
-						{ 25<<8, 0, 25<<8, 0, 10000 },
-						{ 0, -1, 0, 0, 0 }
+						/* first tests runs & test run 1
+						 * { 25<<8, 0, 25<<8, 0, 10000 },
+						 * { 0, -1, 0, 0, 0 }
+						 */
+
+						/* test run 2
+						 * { 25<<8, 0, 30<<8, 0, 10000 },
+						 * { 0, -1, 0, 0, 0 }
+						 */
+
+						/* test run 3
+						 * { 25<<8, 0, 26<<8, 0, 10000 },
+						 * { 0, -1, 0, 0, 0 }
+						 */
+
+						/* test run 4
+						 * { 24<<8, 0, 25<<8, 0, 10000 },
+						 * { 0, -1, 0, 0, 0 }
+						 */
+
+						/* test run 5 (along with forward 2)
+						 * { 25<<8, 0, 26<<8, 0, 10000 },
+						 * { 0, -1, 0, 0, 0 }
+						 */
+
+						/* test runs 6 (along with forward 2)
+						 * { 25<<8, 0, 26<<8, 0, 20000 },
+						 * { 0, -1, 0, 0, 0 }
+						 */
+
+						// test runs 7 (along with forward 2)
+						  { 25<<8, 0, 26<<8, 0, 19000 },
+						  { 0, -1, 0, 0, 0 }
 			};
 
 MotorSequence Forward_2_Sec = {
+						// test run 5, test runs 6, test runs 7
 						{ 25<<8, 0, 25<<8, 0, 20000 },
 						{ 0, -1, 0, 0, 0 }
 			};
@@ -180,15 +212,41 @@ MotorSequence Forward_8_Sec = {
 						{ 0, -1, 0, 0, 0 }
 			};*/
 
-MotorPath MotorPath_1 = {	&Forward_2_Sec,
-							&Forward_1_Sec,
-							//&Wiggle_2_Sec,
-							&Forward_2_Sec,
-							&Forward_1_Sec,
-							//&Wiggle_2_Sec,
-							//&ZeroTurn_180,
-							NULL };
+MotorPath MotorPath_1 = {	
+							//Initial test runs
+							/*
+							* &Forward_2_Sec,
+							* &Forward_1_Sec,
+							* //&Wiggle_2_Sec,
+							* &Forward_2_Sec,
+							* &Forward_1_Sec,
+							* //&Wiggle_2_Sec,
+							* //&ZeroTurn_180,
+							* NULL };
+							*/
+							
+							//test run 1-4
+							/*
+							 * &Forward_1_Sec,
+							 * //&Forward_2_Sec,
+							 * //&Wiggle_2_Sec,
+							 * //&Forward_2_Sec,
+							 * //&Forward_1_Sec,
+							 * //&Wiggle_2_Sec,
+							 * //&ZeroTurn_180,
+							 * NULL };
+							 */
 
+							//test run 5, test runs 6, test runs 7
+							 &Forward_1_Sec,
+							 &Forward_2_Sec,
+							 //&Wiggle_2_Sec,
+							 //&Forward_2_Sec,
+							 //&Forward_1_Sec,
+							 //&Wiggle_2_Sec,
+							 //&ZeroTurn_180,
+							 NULL };
+							 
 static long MotorAction_Idx = 0;
 static long MotorSequence_Idx = 0;
 MotorSequence *Motor_CurrentSequence;

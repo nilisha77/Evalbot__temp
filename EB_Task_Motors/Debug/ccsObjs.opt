@@ -1,1 +1,1 @@
-"./EB_Task_Motors.obj" "./Minden.obj" "./startup_ccs.obj" "./drivers/motor.obj" "../simple_display_ccs.cmd" -l"C:\TI_CodeComposer\StellarisWare-EVALBOT\driverlib\ccs-cm3\Debug\driverlib-cm3.lib" -l"libc.a" 
+"./EB_Task_Motors.obj" "./startup_ccs.obj" "./drivers/display96x16x1.obj" "./drivers/motor.obj" "./drivers/sensors.obj" "./drivers/uartstdio.obj" "../simple_display_ccs.cmd" -l"C:\TI_CodeComposer\StellarisWare-EVALBOT\driverlib\ccs-cm3\Debug\driverlib-cm3.lib" -l"libc.a" 

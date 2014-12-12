@@ -1,0 +1,36 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../drivers/motor.c \
+../drivers/sensors.c \
+../drivers/uartstdio.c 
+
+OBJS += \
+./drivers/motor.obj \
+./drivers/sensors.obj \
+./drivers/uartstdio.obj 
+
+C_DEPS += \
+./drivers/motor.pp \
+./drivers/sensors.pp \
+./drivers/uartstdio.pp 
+
+C_DEPS__QUOTED += \
+"drivers\motor.pp" \
+"drivers\sensors.pp" \
+"drivers\uartstdio.pp" 
+
+OBJS__QUOTED += \
+"drivers\motor.obj" \
+"drivers\sensors.obj" \
+"drivers\uartstdio.obj" 
+
+C_SRCS__QUOTED += \
+"../drivers/motor.c" \
+"../drivers/sensors.c" \
+"../drivers/uartstdio.c" 
+
+

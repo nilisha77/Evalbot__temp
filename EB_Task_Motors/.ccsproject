@@ -8,5 +8,5 @@
 	<rts value="libc.a"/>
 	<connection value="common/targetdb/connections/Stellaris_ICDI_Connection.xml"/>
 	<deviceFamily value="TMS470"/>
-	<isTargetManual value="false"/>
+	<isTargetManual value="true"/>
 </projectOptions>

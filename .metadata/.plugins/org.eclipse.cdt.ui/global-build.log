@@ -1,0 +1,29 @@
+
+**** Build of configuration Debug for project EB_Task_Motors ****
+
+"c:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../EB_Task_Motors.c'
+'Invoking: TMS470 Compiler'
+"c:/ti/ccsv6/tools/compiler/arm_5.1.6/bin/armcl" -mv7M3 --code_state=16 --abi=eabi -me -O2 -g --include_path="c:/ti/ccsv6/tools/compiler/arm_5.1.6/include" --include_path="C:/TI_CodeComposer/StellarisWare-EVALBOT" --include_path="C:/TI_CodeComposer/StellarisWare-EVALBOT/boards/ek-evalbot/simple_display" --include_path="C:/TI_CodeComposer/StellarisWare-EVALBOT/boards/ek-evalbot" --include_path="C:/TI_CodeComposer/StellarisWare-EVALBOT" --gcc --define=ccs --define=PART_LM3S9B96 --define=TARGET_IS_TEMPEST_RB1 --diag_warning=225 --gen_func_subsections=on --ual --preproc_with_compile --preproc_dependency="EB_Task_Motors.pp"  "../EB_Task_Motors.c"
+"../EB_Task_Motors.c", line 273: warning: argument of type "void (*)()" is incompatible with parameter of type "void (*)(tWheel)"
+"../EB_Task_Motors.c", line 311: warning: enumerated type mixed with another type
+"../EB_Task_Motors.c", line 313: warning: enumerated type mixed with another type
+'Finished building: ../EB_Task_Motors.c'
+' '
+'Building target: EB_Task_Blinky.out'
+'Invoking: TMS470 Linker'
+"c:/ti/ccsv6/tools/compiler/arm_5.1.6/bin/armcl" -mv7M3 --code_state=16 --abi=eabi -me -O2 -g --gcc --define=ccs --define=PART_LM3S9B96 --define=TARGET_IS_TEMPEST_RB1 --diag_warning=225 --gen_func_subsections=on --ual -z --stack_size=0x800 -m"EB_Task_Blinky.map" --heap_size=0x800 -i"c:/ti/ccsv6/tools/compiler/arm_5.1.6/lib" -i"c:/ti/ccsv6/tools/compiler/arm_5.1.6/include" --reread_libs --warn_sections --xml_link_info="EB_Task_Blinky_linkInfo.xml" --rom_model -o "EB_Task_Blinky.out"  "./EB_Task_Motors.obj" "./startup_ccs.obj" "./drivers/display96x16x1.obj" "./drivers/motor.obj" "./drivers/sensors.obj" "./drivers/uartstdio.obj" "../simple_display_ccs.cmd" -l"C:\TI_CodeComposer\StellarisWare-EVALBOT\driverlib\ccs-cm3\Debug\driverlib-cm3.lib" -l"libc.a" 
+<Linking>
+'Finished building target: EB_Task_Blinky.out'
+' '
+"c:/ti/ccsv6/utils/tiobj2bin/tiobj2bin" "EB_Task_Blinky.out" "EB_Task_Blinky.bin" "c:/ti/ccsv6/tools/compiler/arm_5.1.6/bin/ofd470" "c:/ti/ccsv6/tools/compiler/arm_5.1.6/bin/hex470" "c:/ti/ccsv6/utils/tiobj2bin/mkhex4bin"
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project EB_Task_Motors ****
+
+"c:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+gmake: Nothing to be done for `all'.
+
+**** Build Finished ****

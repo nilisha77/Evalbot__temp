@@ -1,33 +1,43 @@
 //*****************************************************************************
 //
-//	EB_Task_Motors.c - Just run the motors
+//	EB_Task_Motors.c - Run the motors, display distance traveled
 //
 //		Author: 		Gary J. Minden
 //		Organization:	KU/EECS/EECS 388
 //		Date:			2012-10-30
 //		Version:		1.0
 //
-//		Purpose:		Example program that demonstrates:
-//							(1) Run the motors
+//      Editors:        Nilisha Mane, Cassandra Post, Monica Shafii
+//      Last Edited:    2014-12-12
 //
-
+//		Purpose:		Program that demonstrates:
+//							(1) Run the motors (testing controlled movement)
+//                          (2) Display distance traveled
+//
 //		Notes:			Updated at KU and adapted from the TI LM3S1968 Task_Blinky
 //						and other examples.
 //
 //*****************************************************************************
-//
 
-#include "inc/hw_ints.h"
-#include "inc/hw_memmap.h"
-#include "inc/hw_sysctl.h"
-#include "inc/hw_types.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/systick.h"
-#include "driverlib/gpio.h"
-#include "drivers/display96x16x1.h"
-#include "drivers/motor.h"
+#include "inc/hw_ints.h" // Macros that define interrupt assignments
+#include "inc/hw_memmap.h" // Macros defining memory map
+#include "inc/hw_sysctl.h" // Macros used when accessing the system control hardware
+#include "inc/hw_types.h" // Common types and macros
 
-#include "stdio.h"
+#include "driverlib/rom.h" // Macros to facilitate calling functions in the ROM
+#include "driverlib/sysctl.h" // Prototypes for the system control driver
+#include "driverlib/systick.h" // Prototypes for the systick driver
+#include "driverlib/gpio.h" // Defines & macros for GPIO API
+
+#include "drivers/display96x16x1.h" // Prototypes for the driver for the 96x16 monochrome
+                                    // graphical OLED display found on the ek-evalbot board
+#include "drivers/motor.h" // Public type definitions and prototypes provided by the motor module
+#include "drivers/sensors.h" // Public type definitions and prototypes provided by the sensors module
+#include "drivers/uartstdio.h" // Prototypes for the UART console functions
+
+#include "stdio.h" // Device & i/o stream macros, data structures & functions
+
+#include "math.h" // For calculations
 
 //*****************************************************************************
 //
@@ -55,6 +65,15 @@ volatile static unsigned long g_ulTickCount = 0;
 
 //*****************************************************************************
 //
+// Keep track of total distance traveled, times a hole in the right wheel
+// passes the sensor.
+//
+//*****************************************************************************
+volatile float totalDistance = 0;
+unsigned long wheelSensorTickCount = 0;
+
+//*****************************************************************************
+//
 // Handles the SysTick interrupt.
 //
 //*****************************************************************************
@@ -63,78 +82,44 @@ void SysTickIntHandler(void) {
     //
     // Increment the tick count.
     //
-
     g_ulTickCount++;
 
 }
 
 //*****************************************************************************
 //
-//	Task to drive the motors on the EvalBot.
+//	Task to drive the motors, generate interrupts when right wheel sensor
+//  detects hole has passed, call function to calculate/print distance.
 //
 //*****************************************************************************
-
 static unsigned long Task_Motors_NextExecute = 0;
-static unsigned long Task_Motors_DeltaExecute = 0;		//	SysTicks
-
-static unsigned long Task_Motors_State = 0;			//	State of task.
-														//	Now, index of "program"
-//
-//	Define EvalBot movements with open loop definitions.
-//
-//		For each step, the entries are:
-//			(1) Right Motor duty cycle percent in 8.8 format.
-//			(2) Right Motor direction, 0 -- reverse, 1 -- forward.
-//			(3) Left Motor duty cycle percent in 8.8 format.
-//			(4) Left Motor direction, 0 -- reverse, 1 -- forward.
-//			(5) Number of SysTickCounts for this step.
-//
-static unsigned long EvalBot_Steps[][5] = {
-		{ 25 << 8, 0, 0, 0, 10000 },
-		{ 0, 0, 0, 0, 10000 },
-		{ 0, 0, 25 << 8, 0, 10000 },
-		{ 0, 0, 0, 0, 10000 }
-	};
-
-static unsigned short EvalBot_Nbr_States = 0;
+static unsigned long Task_Motors_DeltaExecute = 0;		// SysTicks
 
 //
-//	Another approach to defining Motor Actions.
+//	Defining Motor Actions.
 //
-
 typedef long MotorAction[5];
 
-/* --
- *
-
+/*
  typedef struct MotorAction {
-			int		RightDuty;
-			int		RightDirection;
-			int		LeftDuty;
-			int		LeftDirection;
-			int		ActionTime;
+			int		RightDuty;  (right motor duty cycle percent in 8.8 format)
+			int		RightDirection; (right motor direction, 0 -- reverse, 1 -- forward)
+			int		LeftDuty; (left motor duty cycle percent in 8.8 format)
+			int		LeftDirection; (left motor direction, 0 -- reverse, 1 -- forward)
+			int		ActionTime; (number of SysTickCounts for this action)
 		} MotorAction;
-
 */
 
 typedef MotorAction MotorSequence[];
-
 typedef MotorSequence *MotorPath[];
 
-MotorSequence MotorSequence_1 = {
-						{ 25 << 8, 0, 0, 0, 10000 },
-						{ 0, 0, 0, 0, 10000 },
-						{ 0, 0, 25 << 8, 0, 10000 },
-						{ 0, 0, 0, 0, 10000 },
-						{ 0, -1, 0, 0, 0 }
-			};
+//
+//	Sequences of straight paths
+//  that can be combined into longer straight paths.
+//
+MotorSequence Forward_1 = {
 
-//
-//	Now some sequences. We'll do some sequences of straight paths
-//		that can be combined into longer straight paths.
-//
-MotorSequence Forward_1_Sec = {
-						/* first tests runs & test run 1
+						/* test run 1
 						 * { 25<<8, 0, 25<<8, 0, 10000 },
 						 * { 0, -1, 0, 0, 0 }
 						 */
@@ -167,92 +152,108 @@ MotorSequence Forward_1_Sec = {
 						// test runs 7 (along with forward 2)
 						  { 25<<8, 0, 26<<8, 0, 19000 },
 						  { 0, -1, 0, 0, 0 }
+
 			};
 
-MotorSequence Forward_2_Sec = {
+MotorSequence Forward_2 = {
+
 						// test run 5, test runs 6, test runs 7
 						{ 25<<8, 0, 25<<8, 0, 20000 },
 						{ 0, -1, 0, 0, 0 }
 			};
 
-MotorSequence Forward_4_Sec = {
-						{ 25<<8, 0, 25<<8, 0, 40000 },
-						{ 0, -1, 0, 0, 0 }
-			};
+MotorPath MotorPath_1 = {
 
-MotorSequence Forward_8_Sec = {
-						{ 25<<8, 0, 25<<8, 0, 80000 },
-						{ 0, -1, 0, 0, 0 }
-			};
-
-
-
-//
-//	Now a wiggle.
-//
-
-/*MotorSequence Wiggle_2_Sec = {
-						{ 25<<8, 0, 25<<8, 1, 5000 },
-						{ 25<<8, 1, 25<<8, 0, 5000 },
-						{ 25<<8, 0, 25<<8, 1, 5000 },
-						{ 25<<8, 1, 25<<8, 0, 5000 },
-						{ 25<<8, 0, 25<<8, 1, 5000 },
-						{ 25<<8, 1, 25<<8, 0, 5000 },
-						{ 0, -1, 0, 0, 0}
-			};
-*/
-
-
-//
-//	Now a zero turn 180 degrees.
-//
-
-/*MotorSequence ZeroTurn_180 = {
-						{ 25<<8, 0, 25<<8, 1, 50000 },
-						{ 0, -1, 0, 0, 0 }
-			};*/
-
-MotorPath MotorPath_1 = {	
-							//Initial test runs
-							/*
-							* &Forward_2_Sec,
-							* &Forward_1_Sec,
-							* //&Wiggle_2_Sec,
-							* &Forward_2_Sec,
-							* &Forward_1_Sec,
-							* //&Wiggle_2_Sec,
-							* //&ZeroTurn_180,
-							* NULL };
-							*/
-							
 							//test run 1-4
 							/*
-							 * &Forward_1_Sec,
-							 * //&Forward_2_Sec,
-							 * //&Wiggle_2_Sec,
-							 * //&Forward_2_Sec,
-							 * //&Forward_1_Sec,
-							 * //&Wiggle_2_Sec,
-							 * //&ZeroTurn_180,
+							 * &Forward_1,
 							 * NULL };
 							 */
 
 							//test run 5, test runs 6, test runs 7
-							 &Forward_1_Sec,
-							 &Forward_2_Sec,
-							 //&Wiggle_2_Sec,
-							 //&Forward_2_Sec,
-							 //&Forward_1_Sec,
-							 //&Wiggle_2_Sec,
-							 //&ZeroTurn_180,
+							 &Forward_1,
+							 &Forward_2,
 							 NULL };
-							 
+
 static long MotorAction_Idx = 0;
 static long MotorSequence_Idx = 0;
 MotorSequence *Motor_CurrentSequence;
 MotorAction *Motor_CurrentAction;
 
 short First_Command;
+
+//
+// Function to print distance traveled in ft/inches
+//
+void printDistance()
+{
+
+	/*
+	// To display distance in feet and inches in integer form (no precision)
+	//
+    unsigned long distanceInFeet = 0;
+    unsigned long distanceInInches = 0;
+
+    if (((long)totalDistance) != 0){
+
+    	distanceInFeet = ((long)totalDistance) / 12;
+    	distanceInInches = ((long)totalDistance) % 12;
+
+    }
+
+	char buffer[21];
+	sprintf(buffer, "%lu\' %lu\", %lu ticks  ", distanceInFeet, distanceInInches, wheelSensorTickCount);
+	Display96x16x1StringDraw(buffer, 0, 1);
+	*/
+
+	//
+	// To display distance in inches in decimal form up to five digits
+	//
+	unsigned long firstPart = totalDistance;
+	unsigned long secondPart = totalDistance * 100000.0f;
+	unsigned long decimalPart = secondPart - (firstPart * 100000);
+	unsigned long integerPart = firstPart;
+	char buffer[21];
+	sprintf(buffer, "%lu.%lu\", %lu         ", integerPart, decimalPart, wheelSensorTickCount);
+	Display96x16x1StringDraw(buffer, 0, 1);
+
+}
+
+//
+// Handler for wheel sensor interrupts
+// Increments totalDistance by distance between wheel sensors
+// Increments total number of times we've encountered a hole
+// in the right wheel. Calls helper function to print.
+//
+void WheelSensorHandler() {
+
+	//
+	// Display "Distance:" on first line of the OLED
+	//
+	Display96x16x1StringDraw("Distance:", 0, 0);
+
+	//
+	// Distance between each hole in wheel is .125 inches
+	// Diameter of wheel is 7/8" -> Radius is 7/16" ->
+	// Circumference is 2*PI*(7/16) = 2.748893572
+	// Distance travelled by wheel is 1/8 of this (8 holes)
+	// 2.748893572 / 8 = 0.3436116965 inches
+	// Increment totalDistance by 0.3436116965 inches
+	//
+	totalDistance = totalDistance + 0.3436116965;
+
+	//
+	// Increment "sensor tick count",
+	// i.e. how many times the sensor detects a hole
+	//
+	wheelSensorTickCount++;
+
+	//
+	// Call helper function to print distance
+	//
+	printDistance();
+
+}
 
 void Task_Motors_Init() {
 
@@ -262,10 +263,22 @@ void Task_Motors_Init() {
     MotorsInit();
 
     //
-    //	Compute number of steps in EvalBot MotorPath.
+    // Initialize the wheel sensors.
+    // WheelSensorHandler is function which will be called on
+    // each pulse from the wheel sensors.
     //
-    //Motor_Nbr_Sequences = sizeof(MotorPath_1) / sizeof(MotorSequence);
+    WheelSensorsInit(WheelSensorHandler);
 
+    //
+    // Enable wheel sensors, enable interrupt for right wheel
+    //
+    WheelSensorEnable();
+    WheelSensorIntEnable(WHEEL_RIGHT);
+
+
+    //
+    // Initialize current motor sequence and action
+    //
     Motor_CurrentSequence = MotorPath_1[MotorSequence_Idx];
     Motor_CurrentAction = &(*Motor_CurrentSequence)[MotorAction_Idx];
 
@@ -275,6 +288,9 @@ void Task_Motors_Init() {
     Task_Motors_DeltaExecute = (SysTickFrequency * 10000) / 10000;
     Task_Motors_NextExecute = g_ulTickCount + Task_Motors_DeltaExecute;
 
+    //
+    // Initialize first command
+    //
     First_Command = (*Motor_CurrentAction)[0];
     First_Command = First_Command;
 }
@@ -342,31 +358,18 @@ void Task_Motors_Execute() {
 
 }
 
-void Task_Motors_Execute_1() {
+//*****************************************************************************
+//
+// Task to initialize the display.
+//
+//*****************************************************************************
 
-	if ( g_ulTickCount >= Task_Motors_NextExecute ) {
+void Task_Display_Init(){
 
-		//
-		//	Set the Motors.
-		//
-		MotorSpeed( RIGHT_SIDE, EvalBot_Steps[Task_Motors_State][0] );
-		MotorDir( RIGHT_SIDE, EvalBot_Steps[Task_Motors_State][1] );
-		MotorSpeed( LEFT_SIDE, EvalBot_Steps[Task_Motors_State][2] );
-		MotorDir( LEFT_SIDE, EvalBot_Steps[Task_Motors_State][3] );
-		MotorRun( RIGHT_SIDE );
-		MotorRun( LEFT_SIDE );
-
-		Task_Motors_NextExecute = g_ulTickCount +  EvalBot_Steps[Task_Motors_State][4];
-
-		//
-		//	Advance the state and check for wrap-around.
-		//
-		Task_Motors_State++;
-		if ( Task_Motors_State == EvalBot_Nbr_States ) {
-			Task_Motors_State = 0;
-		}
-
-	}
+    //
+    // Initialize the board display
+    //
+    Display96x16x1Init(true);
 
 }
 
@@ -375,9 +378,6 @@ void Task_Motors_Execute_1() {
 //	Main program to initialize hardware and execute Tasks.
 //
 //*****************************************************************************
-
-
-
 int main( void )  {
 
     //
@@ -401,16 +401,14 @@ int main( void )  {
     //
     //	Initialize Tasks
     //
-
     Task_Motors_Init();
+	Task_Display_Init();
 
     //
     //	Execute Tasks
     //
-
     while ( 1 ) {
     	Task_Motors_Execute();
-
     }
 
 }

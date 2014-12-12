@@ -56,6 +56,13 @@ extern void SysTickIntHandler(void);
 
 //*****************************************************************************
 //
+// External declaration for the wheel sensor interrupt handler
+//
+//*****************************************************************************
+extern void WheelSensorIntHandler();
+
+//*****************************************************************************
+//
 // The vector table.  Note that the proper constructs must be placed on this to
 // ensure that it ends up at physical address 0x0000.0000 or at the start of
 // the program if located at a start address other than 0.
@@ -85,7 +92,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // GPIO Port B
     IntDefaultHandler,                      // GPIO Port C
     IntDefaultHandler,                      // GPIO Port D
-    IntDefaultHandler,                      // GPIO Port E
+    WheelSensorIntHandler,                  // GPIO Port E, replace default hander with wheel sensor int handler
     IntDefaultHandler,                      // UART0 Rx and Tx
     IntDefaultHandler,                      // UART1 Rx and Tx
     IntDefaultHandler,                      // SSI0 Rx and Tx

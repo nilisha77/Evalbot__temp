@@ -4,14 +4,16 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/TI_CodeComposer/ccsv6/tools/compiler/arm_5.1.7
+CG_TOOL_ROOT := c:/ti/ccsv6/tools/compiler/arm_5.1.6
 
 ORDERED_OBJS += \
 $(GEN_CMDS__FLAG) \
 "./EB_Task_Motors.obj" \
-"./Minden.obj" \
 "./startup_ccs.obj" \
+"./drivers/display96x16x1.obj" \
 "./drivers/motor.obj" \
+"./drivers/sensors.obj" \
+"./drivers/uartstdio.obj" \
 "../simple_display_ccs.cmd" \
 -l"C:\TI_CodeComposer\StellarisWare-EVALBOT\driverlib\ccs-cm3\Debug\driverlib-cm3.lib" \
 -l"libc.a" \
@@ -127,7 +129,7 @@ all: EB_Task_Blinky.out
 EB_Task_Blinky.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: TMS470 Linker'
-	"C:/TI_CodeComposer/ccsv6/tools/compiler/arm_5.1.7/bin/armcl" -mv7M3 --code_state=16 --abi=eabi -me -O2 -g --gcc --define=ccs --define=PART_LM3S9B96 --define=TARGET_IS_TEMPEST_RB1 --diag_warning=225 --gen_func_subsections=on --ual -z --stack_size=0x800 -m"EB_Task_Blinky.map" --heap_size=0x800 -i"C:/TI_CodeComposer/ccsv6/tools/compiler/arm_5.1.7/lib" -i"C:/TI_CodeComposer/ccsv6/tools/compiler/arm_5.1.7/include" --reread_libs --warn_sections --xml_link_info="EB_Task_Blinky_linkInfo.xml" --rom_model -o "EB_Task_Blinky.out" $(ORDERED_OBJS)
+	"c:/ti/ccsv6/tools/compiler/arm_5.1.6/bin/armcl" -mv7M3 --code_state=16 --abi=eabi -me -O2 -g --gcc --define=ccs --define=PART_LM3S9B96 --define=TARGET_IS_TEMPEST_RB1 --diag_warning=225 --gen_func_subsections=on --ual -z --stack_size=0x800 -m"EB_Task_Blinky.map" --heap_size=0x800 -i"c:/ti/ccsv6/tools/compiler/arm_5.1.6/lib" -i"c:/ti/ccsv6/tools/compiler/arm_5.1.6/include" --reread_libs --warn_sections --xml_link_info="EB_Task_Blinky_linkInfo.xml" --rom_model -o "EB_Task_Blinky.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
@@ -135,13 +137,13 @@ EB_Task_Blinky.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)
-	-$(RM) "EB_Task_Motors.pp" "Minden.pp" "startup_ccs.pp" "drivers\motor.pp" 
-	-$(RM) "EB_Task_Motors.obj" "Minden.obj" "startup_ccs.obj" "drivers\motor.obj" 
+	-$(RM) "EB_Task_Motors.pp" "startup_ccs.pp" "drivers\display96x16x1.pp" "drivers\motor.pp" "drivers\sensors.pp" "drivers\uartstdio.pp" 
+	-$(RM) "EB_Task_Motors.obj" "startup_ccs.obj" "drivers\display96x16x1.obj" "drivers\motor.obj" "drivers\sensors.obj" "drivers\uartstdio.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
 post-build:
-	-"C:/TI_CodeComposer/ccsv6/utils/tiobj2bin/tiobj2bin" "EB_Task_Blinky.out" "EB_Task_Blinky.bin" "C:/TI_CodeComposer/ccsv6/tools/compiler/arm_5.1.7/bin/ofd470" "C:/TI_CodeComposer/ccsv6/tools/compiler/arm_5.1.7/bin/hex470" "C:/TI_CodeComposer/ccsv6/utils/tiobj2bin/mkhex4bin"
+	-"c:/ti/ccsv6/utils/tiobj2bin/tiobj2bin" "EB_Task_Blinky.out" "EB_Task_Blinky.bin" "c:/ti/ccsv6/tools/compiler/arm_5.1.6/bin/ofd470" "c:/ti/ccsv6/tools/compiler/arm_5.1.6/bin/hex470" "c:/ti/ccsv6/utils/tiobj2bin/mkhex4bin"
 	-@echo ' '
 
 .PHONY: all clean dependents

@@ -1,33 +1,33 @@
 ******************************************************************************
-                  TI ARM Linker PC v5.1.7                      
+                  TI ARM Linker PC v5.1.6                      
 ******************************************************************************
->> Linked Thu Oct 23 18:06:23 2014
+>> Linked Thu Dec 11 07:49:00 2014
 
 OUTPUT FILE NAME:   <EB_Task_Blinky.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 000009c1
+ENTRY POINT SYMBOL: "_c_int00"  address: 00002861
 
 
 MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  FLASH                 00000000   00040000  00000c1e  0003f3e2  R  X
-  SRAM                  20000000   00018000  000008a2  0001775e  RW X
+  FLASH                 00000000   00040000  00002ec3  0003d13d  R  X
+  SRAM                  20000000   00018000  0000089e  00017762  RW X
 
 
 SEGMENT ALLOCATION MAP
 
 run origin  load origin   length   init length attrs members
 ----------  ----------- ---------- ----------- ----- -------
-00000000    00000000    00000c20   00000c20    r-x
+00000000    00000000    00002ec8   00002ec8    r-x
   00000000    00000000    0000011c   0000011c    r-- .intvecs
-  0000011c    0000011c    000009a6   000009a6    r-x .text
-  00000ac4    00000ac4    000000e4   000000e4    r-- .const
-  00000ba8    00000ba8    00000078   00000078    r-- .cinit
-20000000    20000000    000008a2   00000000    rw-
+  0000011c    0000011c    00002940   00002940    r-x .text
+  00002a5c    00002a5c    000003ff   000003ff    r-- .const
+  00002e60    00002e60    00000068   00000068    r-- .cinit
+20000000    20000000    0000089e   00000000    rw-
   20000000    20000000    00000800   00000000    rw- .stack
-  20000800    20000800    00000094   00000000    rw- .data
-  20000894    20000894    0000000e   00000000    rw- .bss
+  20000800    20000800    0000008c   00000000    rw- .data
+  2000088c    2000088c    00000012   00000000    rw- .bss
 
 
 SECTION ALLOCATION MAP
@@ -41,78 +41,128 @@ section   page    origin      length       input sections
 .init_array 
 *          0    00000000    00000000     UNINITIALIZED
 
-.text      0    0000011c    000009a6     
-                  0000011c    00000198     driverlib-cm3.lib : sysctl.obj (.text:SysCtlClockGet)
-                  000002b4    00000174     motor.obj (.text:MotorsInit)
-                  00000428    00000144     driverlib-cm3.lib : sysctl.obj (.text:SysCtlClockSet)
-                  0000056c    000000bc     EB_Task_Motors.obj (.text:Task_Motors_Execute)
-                  00000628    0000009c     rtsv7M3_T_le_eabi.lib : memcpy_t2.obj (.text)
-                  000006c4    00000094                           : auto_init.obj (.text)
-                  00000758    00000064     motor.obj (.text:MotorSpeed)
-                  000007bc    00000064     EB_Task_Motors.obj (.text:Task_Motors_Init)
-                  00000820    0000005e     rtsv7M3_T_le_eabi.lib : copy_decompress_rle.obj (.text)
-                  0000087e    00000002     startup_ccs.obj (.text:FaultISR)
-                  00000880    00000048     driverlib-cm3.lib : gpio.obj (.text:GPIOPinConfigure)
-                  000008c8    00000044     rtsv7M3_T_le_eabi.lib : cpy_tbl.obj (.text)
-                  0000090c    00000044                           : exit.obj (.text)
-                  00000950    00000038     motor.obj (.text:MotorDir)
-                  00000988    00000038     EB_Task_Motors.obj (.text:main)
-                  000009c0    00000034     rtsv7M3_T_le_eabi.lib : boot.obj (.text)
-                  000009f4    00000024     motor.obj (.text:MotorRun)
-                  00000a18    00000018     rtsv7M3_T_le_eabi.lib : args_main.obj (.text)
-                  00000a30    00000014     driverlib-cm3.lib : systick.obj (.text:SysTickEnable)
-                  00000a44    00000014                       : systick.obj (.text:SysTickIntEnable)
-                  00000a58    00000014     rtsv7M3_T_le_eabi.lib : _lock.obj (.text)
-                  00000a6c    00000012                           : copy_zero_init.obj (.text:decompress:ZI)
-                  00000a7e    00000002     startup_ccs.obj (.text:IntDefaultHandler)
-                  00000a80    00000010     EB_Task_Motors.obj (.text:SysTickIntHandler)
-                  00000a90    00000010     driverlib-cm3.lib : systick.obj (.text:SysTickPeriodSet)
-                  00000aa0    0000000e     rtsv7M3_T_le_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
-                  00000aae    00000006     startup_ccs.obj (.text:ResetISR)
-                  00000ab4    00000006     driverlib-cm3.lib : sysctl.obj (.text:SysCtlDelay)
-                  00000aba    00000006     rtsv7M3_T_le_eabi.lib : copy_decompress_rle.obj (.text:decompress:rle24)
-                  00000ac0    00000002     startup_ccs.obj (.text:NmiSR)
+.text      0    0000011c    00002940     
+                  0000011c    00000ebc     rtsv7M3_T_le_eabi.lib : _printfi.obj (.text)
+                  00000fd8    000001f4                           : ull_div_t2.obj (.text)
+                  000011cc    000001b6                           : fd_add_t2.obj (.text)
+                  00001382    00000002     startup_ccs.obj (.text:FaultISR)
+                  00001384    00000198     driverlib-cm3.lib : sysctl.obj (.text:SysCtlClockGet)
+                  0000151c    00000174     motor.obj (.text:MotorsInit)
+                  00001690    00000144     driverlib-cm3.lib : sysctl.obj (.text:SysCtlClockSet)
+                  000017d4    00000136     rtsv7M3_T_le_eabi.lib : fd_div_t2.obj (.text)
+                  0000190a    00000002     startup_ccs.obj (.text:IntDefaultHandler)
+                  0000190c    00000128     display96x16x1.obj (.text:Display96x16x1Init)
+                  00001a34    000000fc     rtsv7M3_T_le_eabi.lib : fd_mul_t2.obj (.text)
+                  00001b30    000000c4     sensors.obj (.text:WheelSensorsInit)
+                  00001bf4    000000bc     EB_Task_Motors.obj (.text:Task_Motors_Execute)
+                  00001cb0    000000a4     display96x16x1.obj (.text:Display96x16x1StringDrawLen)
+                  00001d54    0000009c     rtsv7M3_T_le_eabi.lib : memcpy_t2.obj (.text)
+                  00001df0    00000094                           : auto_init.obj (.text)
+                  00001e84    0000008c     sensors.obj (.text:WheelSensorIntHandler)
+                  00001f10    00000086     rtsv7M3_T_le_eabi.lib : fd_cmp_t2.obj (.text:__aeabi_cdcmple)
+                  00001f96    00000086                           : fd_cmp_t2.obj (.text:__aeabi_cdrcmple)
+                  0000201c    0000007a                           : fs_mul_t2.obj (.text)
+                  00002096    00000002     startup_ccs.obj (.text:NmiSR)
+                  00002098    00000078     EB_Task_Motors.obj (.text:Task_Motors_Init)
+                  00002110    00000078     rtsv7M3_T_le_eabi.lib : memset_t2.obj (.text)
+                  00002188    00000068     EB_Task_Motors.obj (.text:printDistance)
+                  000021f0    00000064     motor.obj (.text:MotorSpeed)
+                  00002254    00000060     display96x16x1.obj (.text:Display96x16x1WriteFinal)
+                  000022b4    00000060     rtsv7M3_T_le_eabi.lib : sprintf.obj (.text)
+                  00002314    0000005e                           : copy_decompress_rle.obj (.text)
+                  00002372    0000005a                           : ltoa.obj (.text)
+                  000023cc    00000050     display96x16x1.obj (.text:Display96x16x1WriteArray)
+                  0000241c    0000004c     EB_Task_Motors.obj (.text:WheelSensorHandler)
+                  00002468    0000004c     rtsv7M3_T_le_eabi.lib : atoi.obj (.text)
+                  000024b4    0000004a                           : fd_tos_t2.obj (.text)
+                  000024fe    00000002     --HOLE-- [fill = 0]
+                  00002500    00000048     driverlib-cm3.lib : gpio.obj (.text:GPIOPinConfigure)
+                  00002548    00000048     rtsv7M3_T_le_eabi.lib : fd_toi_t2.obj (.text)
+                  00002590    00000044     display96x16x1.obj (.text:Display96x16x1WriteByte)
+                  000025d4    00000044     rtsv7M3_T_le_eabi.lib : cpy_tbl.obj (.text)
+                  00002618    00000044                           : exit.obj (.text)
+                  0000265c    00000044                           : xdtest.obj (.text)
+                  000026a0    0000003c     sensors.obj (.text:WheelSensorIntEnable)
+                  000026dc    0000003c     EB_Task_Motors.obj (.text:main)
+                  00002718    00000038     display96x16x1.obj (.text:Display96x16x1WriteFirst)
+                  00002750    00000038     motor.obj (.text:MotorDir)
+                  00002788    00000038     rtsv7M3_T_le_eabi.lib : fs_tod_t2.obj (.text)
+                  000027c0    00000038                           : fs_toi_t2.obj (.text)
+                  000027f8    00000034     display96x16x1.obj (.text:Display96x16x1ClearLine)
+                  0000282c    00000034     display96x16x1.obj (.text:Display96x16x1DisplayOn)
+                  00002860    00000034     rtsv7M3_T_le_eabi.lib : boot.obj (.text)
+                  00002894    00000034                           : fs_tou_t2.obj (.text)
+                  000028c8    0000002e                           : i_tofd_t2.obj (.text)
+                  000028f6    00000002     --HOLE-- [fill = 0]
+                  000028f8    00000024     motor.obj (.text:MotorRun)
+                  0000291c    0000001c     sensors.obj (.text:WheelSensorEnable)
+                  00002938    0000001a     rtsv7M3_T_le_eabi.lib : memccpy.obj (.text)
+                  00002952    00000002     --HOLE-- [fill = 0]
+                  00002954    00000018                           : args_main.obj (.text)
+                  0000296c    00000018                           : ll_mul_t2.obj (.text)
+                  00002984    00000014     driverlib-cm3.lib : systick.obj (.text:SysTickEnable)
+                  00002998    00000014                       : systick.obj (.text:SysTickIntEnable)
+                  000029ac    00000014     rtsv7M3_T_le_eabi.lib : _lock.obj (.text)
+                  000029c0    00000014                           : strlen.obj (.text)
+                  000029d4    00000012                           : copy_zero_init.obj (.text:decompress:ZI)
+                  000029e6    00000010     display96x16x1.obj (.text:Display96x16x1Clear)
+                  000029f6    00000010     display96x16x1.obj (.text:Display96x16x1StringDraw)
+                  00002a06    00000002     --HOLE-- [fill = 0]
+                  00002a08    00000010     EB_Task_Motors.obj (.text:SysTickIntHandler)
+                  00002a18    00000010     driverlib-cm3.lib : systick.obj (.text:SysTickPeriodSet)
+                  00002a28    0000000e     rtsv7M3_T_le_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
+                  00002a36    0000000e                           : xdclass.obj (.text)
+                  00002a44    00000006     startup_ccs.obj (.text:ResetISR)
+                  00002a4a    00000006     driverlib-cm3.lib : sysctl.obj (.text:SysCtlDelay)
+                  00002a50    00000006     EB_Task_Motors.obj (.text:Task_Display_Init)
+                  00002a56    00000006     rtsv7M3_T_le_eabi.lib : copy_decompress_rle.obj (.text:decompress:rle24)
 
-.const     0    00000ac4    000000e4     
-                  00000ac4    00000078     driverlib-cm3.lib : gpio.obj (.const:g_pulGPIOBaseAddrs)
-                  00000b3c    0000006c                       : sysctl.obj (.const:g_pulXtals)
+.const     0    00002a5c    000003ff     
+                  00002a5c    000001db     display96x16x1.obj (.const:g_pucFont)
+                  00002c37    00000001     --HOLE-- [fill = 0]
+                  00002c38    00000102     rtsv7M3_T_le_eabi.lib : ctype.obj (.const:.string:_ctypes_)
+                  00002d3a    00000002     --HOLE-- [fill = 0]
+                  00002d3c    00000078     driverlib-cm3.lib : gpio.obj (.const:g_pulGPIOBaseAddrs)
+                  00002db4    0000006c                       : sysctl.obj (.const:g_pulXtals)
+                  00002e20    0000002f     display96x16x1.obj (.const:.string:g_pucRITInit)
+                  00002e4f    0000000c     display96x16x1.obj (.const:.string)
 
-.cinit     0    00000ba8    00000078     
-                  00000ba8    0000004d     (.cinit..data.load) [load image, compression = rle]
-                  00000bf5    00000003     --HOLE-- [fill = 0]
-                  00000bf8    0000000c     (__TI_handler_table)
-                  00000c04    00000004     --HOLE-- [fill = 0]
-                  00000c08    00000008     (.cinit..bss.load) [load image, compression = zero_init]
-                  00000c10    00000010     (__TI_cinit_table)
+.cinit     0    00002e60    00000068     
+                  00002e60    00000043     (.cinit..data.load) [load image, compression = rle]
+                  00002ea3    00000001     --HOLE-- [fill = 0]
+                  00002ea4    0000000c     (__TI_handler_table)
+                  00002eb0    00000008     (.cinit..bss.load) [load image, compression = zero_init]
+                  00002eb8    00000010     (__TI_cinit_table)
 
 .stack     0    20000000    00000800     UNINITIALIZED
                   20000000    00000800     --HOLE--
 
-.data      0    20000800    00000094     UNINITIALIZED
-                  20000800    00000030     EB_Task_Motors.obj (.data)
-                  20000830    00000028     EB_Task_Motors.obj (.data:Forward_1_Sec)
-                  20000858    00000028     EB_Task_Motors.obj (.data:Forward_2_Sec)
-                  20000880    00000008     rtsv7M3_T_le_eabi.lib : _lock.obj (.data)
-                  20000888    00000008                           : exit.obj (.data)
-                  20000890    00000004                           : stkdepth_vars.obj (.data)
+.data      0    20000800    0000008c     UNINITIALIZED
+                  20000800    00000028     EB_Task_Motors.obj (.data)
+                  20000828    00000028     EB_Task_Motors.obj (.data:Forward_1)
+                  20000850    00000028     EB_Task_Motors.obj (.data:Forward_2)
+                  20000878    00000008     rtsv7M3_T_le_eabi.lib : _lock.obj (.data)
+                  20000880    00000008                           : exit.obj (.data)
+                  20000888    00000004                           : stkdepth_vars.obj (.data)
 
-.bss       0    20000894    0000000e     UNINITIALIZED
-                  20000894    00000004     (.common:Motor_CurrentAction)
-                  20000898    00000004     (.common:Motor_CurrentSequence)
-                  2000089c    00000004     (.common:g_ulSystemClock)
-                  200008a0    00000002     (.common:First_Command)
+.bss       0    2000088c    00000012     UNINITIALIZED
+                  2000088c    00000004     (.common:Motor_CurrentAction)
+                  20000890    00000004     (.common:Motor_CurrentSequence)
+                  20000894    00000004     (.common:g_pfnWheelCallback)
+                  20000898    00000004     (.common:g_ulSystemClock)
+                  2000089c    00000002     (.common:First_Command)
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00000c10 records: 2, size/record: 8, table size: 16
-	.data: load addr=00000ba8, load size=0000004d bytes, run addr=20000800, run size=00000094 bytes, compression=rle
-	.bss: load addr=00000c08, load size=00000008 bytes, run addr=20000894, run size=0000000e bytes, compression=zero_init
+__TI_cinit_table @ 00002eb8 records: 2, size/record: 8, table size: 16
+	.data: load addr=00002e60, load size=00000043 bytes, run addr=20000800, run size=0000008c bytes, compression=rle
+	.bss: load addr=00002eb0, load size=00000008 bytes, run addr=2000088c, run size=00000012 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00000bf8 records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 00002ea4 records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_decompress_rle24
 	index: 1, handler: __TI_decompress_none
 	index: 2, handler: __TI_zero_init
@@ -122,67 +172,114 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 address    name
 --------   ----
-0000090d   C$$EXIT
-200008a0   First_Command
-20000830   Forward_1_Sec
-20000858   Forward_2_Sec
-00000881   GPIOPinConfigure
-00000951   MotorDir
+00002619   C$$EXIT
+000029e7   Display96x16x1Clear
+000027f9   Display96x16x1ClearLine
+0000282d   Display96x16x1DisplayOn
+0000190d   Display96x16x1Init
+000029f7   Display96x16x1StringDraw
+00001cb1   Display96x16x1StringDrawLen
+2000089c   First_Command
+20000828   Forward_1
+20000850   Forward_2
+00002501   GPIOPinConfigure
+00002751   MotorDir
 20000814   MotorPath_1
-000009f5   MotorRun
-00000759   MotorSpeed
-20000894   Motor_CurrentAction
-20000898   Motor_CurrentSequence
-000002b5   MotorsInit
-00000aaf   ResetISR
+000028f9   MotorRun
+000021f1   MotorSpeed
+2000088c   Motor_CurrentAction
+20000890   Motor_CurrentSequence
+0000151d   MotorsInit
+00002a45   ResetISR
 UNDEFED    SHT$$INIT_ARRAY$$Base
 UNDEFED    SHT$$INIT_ARRAY$$Limit
-0000011d   SysCtlClockGet
-00000429   SysCtlClockSet
-00000ab5   SysCtlDelay
-00000a31   SysTickEnable
-00000a45   SysTickIntEnable
-00000a81   SysTickIntHandler
-00000a91   SysTickPeriodSet
-0000056d   Task_Motors_Execute
-000007bd   Task_Motors_Init
+00001385   SysCtlClockGet
+00001691   SysCtlClockSet
+00002a4b   SysCtlDelay
+00002985   SysTickEnable
+00002999   SysTickIntEnable
+00002a09   SysTickIntHandler
+00002a19   SysTickPeriodSet
+00002a51   Task_Display_Init
+00001bf5   Task_Motors_Execute
+00002099   Task_Motors_Init
+0000291d   WheelSensorEnable
+0000241d   WheelSensorHandler
+000026a1   WheelSensorIntEnable
+00001e85   WheelSensorIntHandler
+00001b31   WheelSensorsInit
+00002a37   _Dclass
+0000265d   _Dtest
 20000800   __STACK_END
 00000800   __STACK_SIZE
 20000400   __STACK_TOP
-00000c10   __TI_CINIT_Base
-00000c20   __TI_CINIT_Limit
-00000bf8   __TI_Handler_Table_Base
-00000c04   __TI_Handler_Table_Limit
+00002eb8   __TI_CINIT_Base
+00002ec8   __TI_CINIT_Limit
+00002ea4   __TI_Handler_Table_Base
+00002eb0   __TI_Handler_Table_Limit
 00000001   __TI_args_main
-000006c5   __TI_auto_init
-20000888   __TI_cleanup_ptr
-00000aa1   __TI_decompress_none
-00000abb   __TI_decompress_rle24
-2000088c   __TI_dtors_ptr
+00001df1   __TI_auto_init
+20000880   __TI_cleanup_ptr
+00002a29   __TI_decompress_none
+00002a57   __TI_decompress_rle24
+20000884   __TI_dtors_ptr
+00000ccf   __TI_printfi
 00000000   __TI_static_base__
-00000a6d   __TI_zero_init
-00000629   __aeabi_memcpy
-00000629   __aeabi_memcpy4
-00000629   __aeabi_memcpy8
+000029d5   __TI_zero_init
+00001f11   __aeabi_cdcmpeq
+00001f11   __aeabi_cdcmple
+00001f97   __aeabi_cdrcmple
+000024b5   __aeabi_d2f
+00002549   __aeabi_d2iz
+000011d7   __aeabi_dadd
+000017d5   __aeabi_ddiv
+00001a35   __aeabi_dmul
+000011cd   __aeabi_dsub
+00002789   __aeabi_f2d
+000027c1   __aeabi_f2iz
+00002895   __aeabi_f2uiz
+0000201d   __aeabi_fmul
+000028c9   __aeabi_i2d
+0000296d   __aeabi_lmul
+00002111   __aeabi_memclr
+00002111   __aeabi_memclr4
+00002111   __aeabi_memclr8
+00001d55   __aeabi_memcpy
+00001d55   __aeabi_memcpy4
+00001d55   __aeabi_memcpy8
+00002113   __aeabi_memset
+00002113   __aeabi_memset4
+00002113   __aeabi_memset8
+00000fd9   __aeabi_uldivmod
 ffffffff   __binit__
 ffffffff   __c_args__
 20000000   __stack
-00000a19   _args_main
-000009c1   _c_int00
-20000880   _lock
-00000a67   _nop
-00000a5f   _register_lock
-00000a59   _register_unlock
-20000884   _unlock
-00000911   abort
+00002955   _args_main
+00002861   _c_int00
+00002c38   _ctypes_
+20000878   _lock
+000029bb   _nop
+000029b3   _register_lock
+000029ad   _register_unlock
+2000087c   _unlock
+0000261d   abort
+00002469   atoi
 ffffffff   binit
-000008c9   copy_in
-00000919   exit
+000025d5   copy_in
+00002625   exit
 00000000   g_pfnVectors
-2000089c   g_ulSystemClock
-00000989   main
-20000890   main_func_sp
-00000629   memcpy
+20000898   g_ulSystemClock
+00002373   ltoa
+000026dd   main
+20000888   main_func_sp
+00002939   memccpy
+00001d55   memcpy
+00002119   memset
+00002189   printDistance
+000022b5   sprintf
+000029c1   strlen
+20000804   totalDistance
+20000808   wheelSensorTickCount
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -192,63 +289,110 @@ address    name
 00000000   __TI_static_base__
 00000000   g_pfnVectors
 00000001   __TI_args_main
-0000011d   SysCtlClockGet
-000002b5   MotorsInit
-00000429   SysCtlClockSet
-0000056d   Task_Motors_Execute
-00000629   __aeabi_memcpy
-00000629   __aeabi_memcpy4
-00000629   __aeabi_memcpy8
-00000629   memcpy
-000006c5   __TI_auto_init
-00000759   MotorSpeed
-000007bd   Task_Motors_Init
 00000800   __STACK_SIZE
-00000881   GPIOPinConfigure
-000008c9   copy_in
-0000090d   C$$EXIT
-00000911   abort
-00000919   exit
-00000951   MotorDir
-00000989   main
-000009c1   _c_int00
-000009f5   MotorRun
-00000a19   _args_main
-00000a31   SysTickEnable
-00000a45   SysTickIntEnable
-00000a59   _register_unlock
-00000a5f   _register_lock
-00000a67   _nop
-00000a6d   __TI_zero_init
-00000a81   SysTickIntHandler
-00000a91   SysTickPeriodSet
-00000aa1   __TI_decompress_none
-00000aaf   ResetISR
-00000ab5   SysCtlDelay
-00000abb   __TI_decompress_rle24
-00000bf8   __TI_Handler_Table_Base
-00000c04   __TI_Handler_Table_Limit
-00000c10   __TI_CINIT_Base
-00000c20   __TI_CINIT_Limit
+00000ccf   __TI_printfi
+00000fd9   __aeabi_uldivmod
+000011cd   __aeabi_dsub
+000011d7   __aeabi_dadd
+00001385   SysCtlClockGet
+0000151d   MotorsInit
+00001691   SysCtlClockSet
+000017d5   __aeabi_ddiv
+0000190d   Display96x16x1Init
+00001a35   __aeabi_dmul
+00001b31   WheelSensorsInit
+00001bf5   Task_Motors_Execute
+00001cb1   Display96x16x1StringDrawLen
+00001d55   __aeabi_memcpy
+00001d55   __aeabi_memcpy4
+00001d55   __aeabi_memcpy8
+00001d55   memcpy
+00001df1   __TI_auto_init
+00001e85   WheelSensorIntHandler
+00001f11   __aeabi_cdcmpeq
+00001f11   __aeabi_cdcmple
+00001f97   __aeabi_cdrcmple
+0000201d   __aeabi_fmul
+00002099   Task_Motors_Init
+00002111   __aeabi_memclr
+00002111   __aeabi_memclr4
+00002111   __aeabi_memclr8
+00002113   __aeabi_memset
+00002113   __aeabi_memset4
+00002113   __aeabi_memset8
+00002119   memset
+00002189   printDistance
+000021f1   MotorSpeed
+000022b5   sprintf
+00002373   ltoa
+0000241d   WheelSensorHandler
+00002469   atoi
+000024b5   __aeabi_d2f
+00002501   GPIOPinConfigure
+00002549   __aeabi_d2iz
+000025d5   copy_in
+00002619   C$$EXIT
+0000261d   abort
+00002625   exit
+0000265d   _Dtest
+000026a1   WheelSensorIntEnable
+000026dd   main
+00002751   MotorDir
+00002789   __aeabi_f2d
+000027c1   __aeabi_f2iz
+000027f9   Display96x16x1ClearLine
+0000282d   Display96x16x1DisplayOn
+00002861   _c_int00
+00002895   __aeabi_f2uiz
+000028c9   __aeabi_i2d
+000028f9   MotorRun
+0000291d   WheelSensorEnable
+00002939   memccpy
+00002955   _args_main
+0000296d   __aeabi_lmul
+00002985   SysTickEnable
+00002999   SysTickIntEnable
+000029ad   _register_unlock
+000029b3   _register_lock
+000029bb   _nop
+000029c1   strlen
+000029d5   __TI_zero_init
+000029e7   Display96x16x1Clear
+000029f7   Display96x16x1StringDraw
+00002a09   SysTickIntHandler
+00002a19   SysTickPeriodSet
+00002a29   __TI_decompress_none
+00002a37   _Dclass
+00002a45   ResetISR
+00002a4b   SysCtlDelay
+00002a51   Task_Display_Init
+00002a57   __TI_decompress_rle24
+00002c38   _ctypes_
+00002ea4   __TI_Handler_Table_Base
+00002eb0   __TI_Handler_Table_Limit
+00002eb8   __TI_CINIT_Base
+00002ec8   __TI_CINIT_Limit
 20000000   __stack
 20000400   __STACK_TOP
 20000800   __STACK_END
+20000804   totalDistance
+20000808   wheelSensorTickCount
 20000814   MotorPath_1
-20000830   Forward_1_Sec
-20000858   Forward_2_Sec
-20000880   _lock
-20000884   _unlock
-20000888   __TI_cleanup_ptr
-2000088c   __TI_dtors_ptr
-20000890   main_func_sp
-20000894   Motor_CurrentAction
-20000898   Motor_CurrentSequence
-2000089c   g_ulSystemClock
-200008a0   First_Command
+20000828   Forward_1
+20000850   Forward_2
+20000878   _lock
+2000087c   _unlock
+20000880   __TI_cleanup_ptr
+20000884   __TI_dtors_ptr
+20000888   main_func_sp
+2000088c   Motor_CurrentAction
+20000890   Motor_CurrentSequence
+20000898   g_ulSystemClock
+2000089c   First_Command
 ffffffff   __binit__
 ffffffff   __c_args__
 ffffffff   binit
 UNDEFED    SHT$$INIT_ARRAY$$Base
 UNDEFED    SHT$$INIT_ARRAY$$Limit
 
-[61 symbols]
+[108 symbols]

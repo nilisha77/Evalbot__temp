@@ -1,6 +1,6 @@
-Evalbot__temp
+Evalbot__movement
 =============
 
-Evalbot with temperature sensing capability
+Evalbot with controlled movement, distance display
 
-This is a project done for Advanced Embedded Systems class by cassie, monica and nilisha
+This is a project done for EECS 690 Advanced Embedded Systems class by Cassie, Monica and Nilisha

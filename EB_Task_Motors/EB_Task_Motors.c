@@ -208,6 +208,10 @@ void printDistance()
 
 	//
 	// To display distance in inches in decimal form up to five digits
+	// integerPart is the integer portion of the total distance
+	// decimalPart is the decimal portion of the total distance up to 5 places
+	// with the integerPart removed
+	// Place it all in a char array and display on OLED
 	//
 	unsigned long firstPart = totalDistance;
 	unsigned long secondPart = totalDistance * 100000.0f;
